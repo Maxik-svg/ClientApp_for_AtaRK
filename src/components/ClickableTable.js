@@ -3,9 +3,9 @@ import Seat from "./Seat";
 
 class ClickableTable extends Component{
   renderHall = () => {
-    return this.props.Seats.map((value) => {
+    return this.props.Seats.map((value, key) => {
       return (
-        <tr>
+        <tr key={key}>
           {value.map((cell) => {
            return (
              <Seat key = {cell.Id} cell = {cell} changeState = {this.props.changeSeatState}/>

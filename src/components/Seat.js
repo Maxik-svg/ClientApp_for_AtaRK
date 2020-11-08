@@ -1,10 +1,6 @@
 import React, {Component} from "react";
 
 class Seat extends Component{
-  printInfo = () => {
-    console.log("x: " + this.props.row + " y: " + this.props.col)
-  }
-
   DefineCellColor()
   {
     return this.props.cell.IsChecked ? "#5cf174" : "#5ac6ec"

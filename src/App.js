@@ -1,6 +1,8 @@
 import './App.css';
 import React, {Component} from "react";
 import ClickableTable from "./components/ClickableTable";
+import Header from "./components/layout/Header";
+import "bootstrap"
 
 global.IsMouseButtonPressed = false;
 
@@ -34,32 +36,25 @@ class App extends Component{
     this.setState(this.state.Seats.map((row) => {
       row.map((seat) => {
         if(seat.Id === id){
-          if(global.ShouldColorSeats & seat.IsChecked)
-            return;
-
-          if(!global.ShouldColorSeats && !seat.IsChecked)
+          if(global.ShouldColorSeats && seat.IsChecked
+          || !global.ShouldColorSeats && !seat.IsChecked)
             return;
 
           seat.IsChecked = !seat.IsChecked;
         }
 
-
         return seat;
       })
       return row;
     }))
-    //console.log("state changed " + this.state.Seats[x][y])
   }
 
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          {/*<img src={logo} className="App-logo" alt="logo"/>*/}
-        </header>
+        <Header />
         <h1>App</h1>
         <ClickableTable N = {this.state.N} M = {this.state.M} Seats = {this.state.Seats} changeSeatState = {this.changeSeatState}/>
-
       </div>
     );
   }
