@@ -9,9 +9,7 @@ class Seat extends Component{
   getStyle = () =>  {
     return {
       backgroundColor: this.DefineCellColor(),
-      cursor: "pointer",
-      width: window.innerWidth * .9 / 30,
-      height: window.innerHeight * .9 / 12
+      cursor: "pointer"
     }
   }
 
@@ -35,7 +33,7 @@ class Seat extends Component{
             onMouseUp = {this.setMouseState.bind(this, false)}
             onMouseDown = {this.setMouseState.bind(this, true)}
             onMouseOver = {this.changeState.bind(this, id)}
-            onClick = {(e) => this.changeState.bind(this, id, e)}> </td>
+            onClick = {(e) => this.changeState.bind(this, id, e)}></td>
       </React.Fragment>
     );
   }
