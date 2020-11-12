@@ -61,7 +61,7 @@ class ClickableTable extends Component{
       <React.Fragment>
         <h1>{10}X{30}</h1>
         <div className="container float-left">
-          <table style={{width:1500, height: 800}}>
+          <table style={{width:1500, height: 500}}>
             <tbody>{this.renderHall()}</tbody>
           </table>
         </div>
