@@ -22,7 +22,6 @@ class App extends Component{
           <Header />
           <Route exact path="/" render={props => (
             <React.Fragment>
-              <h1>App</h1>
               <ClickableTable />
             </React.Fragment>
           )} />
