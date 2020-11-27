@@ -5,6 +5,8 @@ import ClickableTable from "./components/ClickableTable";
 import Header from "./components/layout/Header";
 import "bootstrap"
 import Users from "./components/pages/Users";
+import Businesses from "./components/pages/Businesses";
+import Bracelets from "./components/pages/Bracelets";
 
 global.IsMouseButtonPressed = false;
 
@@ -26,6 +28,8 @@ class App extends Component{
             </React.Fragment>
           )} />
           <Route path="/users" component={Users}/>
+          <Route path="/businesses" component={Businesses}/>
+          <Route path="/bracelets" component={Bracelets}/>
         </Router>
       </div>
     );

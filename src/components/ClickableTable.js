@@ -86,6 +86,17 @@ class ClickableTable extends Component{
               <input className="form-control" name="height" placeholder="height"
                      onChange={this.handleChange}/>
             </div>
+            <div className="form-group">
+              <div className="col-auto">
+                <label htmlFor="customSelect">Preference</label>
+                <select className="custom-select" id="customSelect">
+                  <option selected value="0">Free</option>
+                  <option value="1">Occupied</option>
+                  <option value="2">Danger</option>
+                  <option value="3">InDanger</option>
+                </select>
+              </div>
+            </div>
             <input className="btn btn-sm border-dark bg-light" type="submit" value="Change seat number"/>
           </form>
 

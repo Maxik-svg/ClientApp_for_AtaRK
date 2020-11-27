@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import axios from "axios";
 
-class Users extends Component {
+class Businesses extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -13,7 +13,7 @@ class Users extends Component {
   }
 
   componentDidMount() {
-    axios.get("https://localhost:5001/api/users")
+    axios.get(`https://localhost:5001/api/${sourceTable}`)
       .then(res => {
         this.setState({result: res.data});
         console.log(this.state.result)
@@ -28,26 +28,22 @@ class Users extends Component {
           <th>{"name"}</th>
           <th>{"email"}</th>
           <th>{"password"}</th>
-          <th>{"info"}</th>
-          <th>{"braceletId"}</th>
         </React.Fragment>
       )
     }
   }
 
   renderTableData = () => {
-    return this.state.result.map((user) => {
-      const {id, name, email, password, info, braceletId} = user //destructuring
+    return this.state.result.map((business) => {
+      const {id, name, email, password} = business //destructuring
       return (
         <tr key={id}>
           <td>{id}</td>
           <td>{name}</td>
           <td>{email}</td>
           <td>{password}</td>
-          <td>{info ?? "null"}</td>
-          <td>{braceletId ?? "null"}</td>
           <td><a style={linkStyle} onClick={() => {
-            axios.delete("https://localhost:5001/api/users/" + id)
+            axios.delete(`https://localhost:5001/api/${sourceTable}/` + id)
               .then(this.setState({
                 result: [...this.state.result.filter((x) => x.Id
                   !== id)]
@@ -86,16 +82,7 @@ class Users extends Component {
             <input className="form-control" name="password" placeholder="Password"
                    onChange={this.handleChange}/>
           </div>
-          <div className="form-group">
-            <input className="form-control" name="info" placeholder="Info"
-                   onChange={this.handleChange} />
-          </div>
-          <div className="form-group">
-            <input className="form-control" name="braceletId" placeholder="BraceletId"
-                   onChange={this.handleChange}/>
-          </div>
           <input className="btn btn-primary" type="submit"/>
-
         </form>
       </div>
     )
@@ -107,29 +94,25 @@ class Users extends Component {
       name: this.state.toSend.name,
       email: this.state.toSend.email,
       password: this.state.toSend.password,
-      info: this.state.toSend.info,
-      braceletId: this.state.toSend.braceletId
     }
 
     console.log(valuesToSend);
 
     let idForUpdate = this.state.idForUpdate;
     if (idForUpdate == null) {
-      axios.post("https://localhost:5001/api/users", valuesToSend)
+      axios.post(`https://localhost:5001/api/${sourceTable}`, valuesToSend)
         .then(res =>
           this.setState({result: [...this.state.result, res.data], idForUpdate: null, updatingDbStarted: false})
         ).catch((reason => alert(reason)));
     } else {
-      axios.post(`https://localhost:5001/api/users/${idForUpdate}`, valuesToSend)
+      axios.post(`https://localhost:5001/api/${sourceTable}/${idForUpdate}`, valuesToSend)
         .then(() =>
           this.setState({
             result: this.state.result.map((val) => {
               if (val.Id === idForUpdate) {
                 val.name = valuesToSend.name;
                 val.email = valuesToSend.email;
-                val.password = valuesToSend.password
-                val.info = valuesToSend.info;
-                val.braceletId = valuesToSend.braceletId;
+                val.password = valuesToSend.password;
               }
 
               return val;
@@ -142,7 +125,7 @@ class Users extends Component {
   render() {
     return (
       <div className="container-fluid">
-        <h1>Users</h1>
+        <h1>{sourceTable.charAt(0).toUpperCase() + sourceTable.slice(1)}</h1>
         <table className="table table-striped  m-md-2">
           <tbody>
           <tr>{this.renderTableHeader()}</tr>
@@ -162,4 +145,6 @@ const linkStyle = {
   cursor: "pointer"
 }
 
-export default Users;
+const sourceTable = "businesses"
+
+export default Businesses;

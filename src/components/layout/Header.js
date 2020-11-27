@@ -1,21 +1,14 @@
 import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 
-const pages = {users: "#", halls: "#"};
+const pages = {businesses: "#", users: "#", halls: "#", bracelets: "#"};
 
 class Header extends Component{
   printNavPages = () => {
     return Object.keys(pages).map((title) => {
       let upperCaseTitle = title.charAt(0).toUpperCase() + title.slice(1);
-      return(
-        <div key={title} className="nav-item dropdown">
-          <Link to={"/"+ title} id={title} className="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{upperCaseTitle}</Link>
-          <div className="dropdown-menu" aria-labelledby={title}>
-            <Link className="dropdown-item" to={"/"+ title}>{upperCaseTitle}</Link>
-            <a className="dropdown-item" href="#">Another action</a>
-            <a className="dropdown-item" href="#">Something else here</a>
-          </div>
-        </div>
+      return (
+        <Link key={title} to={"/" + title} id={title} className="nav-link">{upperCaseTitle}</Link>
       )
     })
   }
