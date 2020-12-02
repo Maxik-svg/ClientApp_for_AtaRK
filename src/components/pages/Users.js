@@ -79,11 +79,11 @@ class Users extends Component {
                    onChange={this.handleChange}/>
           </div>
           <div className="form-group">
-            <input className="form-control" name="email" placeholder="Email"
+            <input className="form-control" type="email" name="email" placeholder="Email"
                    onChange={this.handleChange}/>
           </div>
           <div className="form-group">
-            <input className="form-control" name="password" placeholder="Password"
+            <input className="form-control" type="password" name="password" placeholder="Password"
                    onChange={this.handleChange}/>
           </div>
           <div className="form-group">

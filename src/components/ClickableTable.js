@@ -4,8 +4,26 @@ import axios from "axios";
 
 class ClickableTable extends Component{
   state = {
-    hallSettings: {width: 30, height: 10},
-    Seats: this.createSeats(10, 30)
+    hallSettings: {width: 30, height: 10, costType: costType.cheap, businessId: 0, updateId: -1},
+    Seats: this.createSeats(10, 30),
+    result: null
+  }
+
+  componentDidMount() {
+    axios.get(`https://localhost:5001/api/businesses`)
+      .then(res => {
+        this.setState({result: res.data});
+        console.log(this.state.result)
+      })
+      .catch(ex => alert(ex));
+
+    if(this.props.idForUpdate >= 0)
+      axios.get(`https://localhost:5001/api/halls/${this.props.idForUpdate}`)
+        .then(res => {
+          this.setState({result: res.data});
+          console.log(this.state.result)
+        })
+        .catch(ex => alert(ex));
   }
 
   createSeats(row, col){
@@ -16,7 +34,7 @@ class ClickableTable extends Component{
 
       for (let j = 0; j < rows[i].length; j++){
         rows[i][j] = {
-          Id: i * rows[i].length + j,
+            Id: i * rows[i].length + j,
           isChecked: false,
           CostType: 0,
           State: 0,
@@ -37,6 +55,7 @@ class ClickableTable extends Component{
             return;
 
           seat.isChecked = !seat.isChecked;
+          seat.CostType = Number(this.state.hallSettings.costType);
           seat.UserId = seat.UserId === null ? seat.Id : null;
         }
 
@@ -52,12 +71,26 @@ class ClickableTable extends Component{
         <tr key={key}>
           {value.map((cell) => {
            return (
-             <Seat key = {cell.Id} cell = {cell} changeState = {this.changeSeatState}/>
+             <Seat key = {cell.Id} cell = {cell} changeState = {this.changeSeatState} hallSettings={this.state.hallSettings}/>
            )
           })}
         </tr>
       )
     })
+  }
+
+  generateOptionsForBusinesses = () => {
+    let items = [];
+
+    this.state?.result?.map((val) => {
+        items.push(<option key={val.id} onChange={this.handleChange} value={val.id}>{val.name + `_${val.id}`}</option>)
+    })
+
+    return items;
+  }
+
+  onDropdownSelected(e) {
+    console.log("THE VAL", e.target.value);
   }
 
   handleChange = (e) => {
@@ -87,13 +120,24 @@ class ClickableTable extends Component{
                      onChange={this.handleChange}/>
             </div>
             <div className="form-group">
+              <input className="form-control" name="updateId" placeholder="idToUpdate"
+                     onChange={this.handleChange}/>
+            </div>
+            <div className="form-group">
               <div className="col-auto">
-                <label htmlFor="customSelect">Preference</label>
-                <select className="custom-select" id="customSelect">
-                  <option selected value="0">Free</option>
-                  <option value="1">Occupied</option>
-                  <option value="2">Danger</option>
-                  <option value="3">InDanger</option>
+                <label htmlFor="costType">Cost Type</label>
+                <select name="costType" onChange={this.handleChange} className="custom-select" id="costType">
+                  <option name="costType" selected value="0">Cheap</option>
+                  <option name="costType" value="1">Middle</option>
+                  <option name="costType" value="2">Expensive</option>
+                </select>
+              </div>
+            </div>
+            <div className="form-group">
+              <div className="col-auto">
+                <label htmlFor="businessSelect">Business (owner of the hall)</label>
+                <select name="businessId" onChange={this.handleChange} className="custom-select" id="businessSelect">
+                  {this.generateOptionsForBusinesses()}
                 </select>
               </div>
             </div>
@@ -116,16 +160,29 @@ class ClickableTable extends Component{
     this.setState({Seats: this.createSeats(Number(height), Number(width))})
   }
 
-  onSubmitToServer = (e) =>{
+  onSubmitToServer = (e) => {
     e.preventDefault();
-
-    axios.post("https://localhost:5001/api/halls/1", {
-      Business: null,
-      _Seats: JSON.stringify(this.state.Seats)
-    })
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
+    if (this.state.hallSettings.updateId !== undefined && this.state.hallSettings.updateId >= 0)
+      axios.post(`https://localhost:5001/api/halls/${this.state.hallSettings.updateId}`, {
+        BusinessId: Number(this.state.hallSettings.businessId),
+        _Seats: JSON.stringify(this.state.Seats)
+      })
+        .then(res => console.log(res))
+        .catch(err => alert(err));
+    else
+      axios.post("https://localhost:5001/api/halls", {
+        BusinessId: Number(this.state.hallSettings.businessId),
+        _Seats: JSON.stringify(this.state.Seats)
+      })
+        .then(res => console.log(res))
+        .catch(err => alert(err));
   }
 }
 
 export default ClickableTable;
+
+const costType = {
+  cheap: 0,
+  middle: 1,
+  expensive: 2
+}

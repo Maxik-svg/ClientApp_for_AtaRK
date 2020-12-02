@@ -3,7 +3,22 @@ import React, {Component} from "react";
 class Seat extends Component{
   DefineCellColor()
   {
-    return this.props.cell.isChecked ? "#5cf174" : "#5ac6ec"
+    const {isChecked, CostType, State} = this.props.cell;
+    if(isChecked){
+      if(State === seatState.danger)
+        return "#ea2b2b"
+
+      switch (this.props.cell.CostType){
+        case (costType.cheap):
+          return "#30bc62";
+        case (costType.middle):
+          return "#e98b10";
+        case (costType.expensive):
+          return "#ad33f5";
+      }
+    }
+
+    return "#5ac6ec"
   }
 
   getStyle = () =>  {
